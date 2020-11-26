@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="cinemaDB" Class="CinemaDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=WINAPP43MDHLF7O\SQLEXPRESS;Initial Catalog=cinemaDB;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False" SettingsObjectName="LINQToSQL.Properties.Settings" SettingsPropertyName="cinemaDBConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Actors" Member="Actors">
+    <Type Name="Actor">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FirstName" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="LastName" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="Birthdate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Column Name="Cachet" Type="System.Decimal" DbType="Money NOT NULL" CanBeNull="false" />
+      <Association Name="Actor_Cast" Member="Casts" ThisKey="ID" OtherKey="ActorId" Type="Cast" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Casts" Member="Casts">
+    <Type Name="Cast">
+      <Column Name="MovieId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="ActorId" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="Actor_Cast" Member="Actor" ThisKey="ActorId" OtherKey="ID" Type="Actor" IsForeignKey="true" />
+      <Association Name="movy_Cast" Member="movy" ThisKey="MovieId" OtherKey="ID" Type="movy" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.movies" Member="movies">
+    <Type Name="movy">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="titolo" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="genere" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="durata" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="movy_Cast" Member="Casts" ThisKey="ID" OtherKey="MovieId" Type="Cast" />
+      <Association Name="movy_schedule" Member="schedules" ThisKey="ID" OtherKey="movieID" Type="schedule" />
+    </Type>
+  </Table>
+  <Table Name="dbo.reservations" Member="reservations">
+    <Type Name="reservation">
+      <Column Name="scheduleID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ppl" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="mail" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Association Name="schedule_reservation" Member="schedule" ThisKey="scheduleID" OtherKey="ID" Type="schedule" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.rooms" Member="rooms">
+    <Type Name="room">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="nome" Type="System.String" DbType="NVarChar(255)" CanBeNull="true" />
+      <Column Name="posti" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="room_schedule" Member="schedules" ThisKey="ID" OtherKey="roomID" Type="schedule" />
+    </Type>
+  </Table>
+  <Table Name="dbo.schedules" Member="schedules">
+    <Type Name="schedule">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="movieID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="roomID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="price" Type="System.Decimal" DbType="Money" CanBeNull="true" />
+      <Column Name="time" Type="System.TimeSpan" DbType="Time" CanBeNull="true" />
+      <Column Name="disp" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="schedule_reservation" Member="reservations" ThisKey="ID" OtherKey="scheduleID" Type="reservation" />
+      <Association Name="movy_schedule" Member="movy" ThisKey="movieID" OtherKey="ID" Type="movy" IsForeignKey="true" />
+      <Association Name="room_schedule" Member="room" ThisKey="roomID" OtherKey="ID" Type="room" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
